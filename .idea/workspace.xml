@@ -1,73 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ad54662a-f878-4db3-95ac-44e7019fb6ab" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/feature_list/full_training_dataset.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/full_training_dataset.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/test/training_neatfile_4.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/training.100000.processed.noemoticon.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/training.1600000.processed.noemoticon.csv.tar.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/training_neatfile_4.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/report/Data Mining Project Report - Ravikiran Janardhana.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/analyze.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/baseline_classifier.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bass_analyze.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build_training_set.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/classifier_helper.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/baseline_output.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/feature_list.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/feature_list/feature_list.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/feature_list/py_featurelist_gen.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/feature_list/stopwords.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/full-corpus.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/neg_mod.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/negative_keywords.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/pos_mod.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/positive_keywords.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/sampleTweetFeatureList.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/sampleTweets.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/sampleTweets.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/test/training_neatfile_2.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/training_neatfile.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/twit_negative.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/twit_positive.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/weekTweets/weekTweets_iphone_1596.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialClassifiers.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialDemo.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialDemo2.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialMovies.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialMoviesSentiment.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dsocialNBclassifier.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/get_twitter_data.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/html_helper.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/libsvm_classifier.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/license_for_dummies.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/license_gpl_v2.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/max_entropy_classifier.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/movies.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/naive_bayes_classifier.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/naive_bayes_classifier_demo.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/py_submit_maxent.bash" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/py_submit_naivebayes.bash" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/py_submit_svm.bash" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/simpleDemo.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/styles.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/svm_demo.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_twitter_data.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/twitter_sentiment.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/.classpath" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/.project" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/.settings/org.eclipse.core.resources.prefs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/.settings/org.eclipse.jdt.core.prefs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/.settings/org.eclipse.m2e.core.prefs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/pom.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/src/main/java/org/eturias/dsocial/nlp/App.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dsocial.nlp/src/test/java/org/eturias/dsocial/nlp/AppTest.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-    </list>
+    <list default="true" id="ad54662a-f878-4db3-95ac-44e7019fb6ab" name="Default" comment="" />
     <ignored path="dsocial.npl.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -114,8 +48,8 @@
       <file leaf-file-name="dsocialLib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/dsocialLib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+            <state relative-caret-position="165">
+              <caret line="68" column="13" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -144,8 +78,8 @@
         <option value="$PROJECT_DIR$/dsocialMovies.py" />
         <option value="$PROJECT_DIR$/dsocialMoviesSentiment.py" />
         <option value="$PROJECT_DIR$/dsocialLib.py" />
-        <option value="$PROJECT_DIR$/lib/dsocialLib.py" />
         <option value="$PROJECT_DIR$/dsocialClassifiers.py" />
+        <option value="$PROJECT_DIR$/lib/dsocialLib.py" />
       </list>
     </option>
   </component>
@@ -984,15 +918,15 @@
       <option name="presentableId" value="Default" />
       <updated>1481452145549</updated>
       <workItem from="1481452147811" duration="42683000" />
-      <workItem from="1481653457548" duration="35092000" />
+      <workItem from="1481653457548" duration="35221000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="77775000" />
+    <option name="totallyTimeSpent" value="77904000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1155,8 +1089,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/dsocialLib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+        <state relative-caret-position="165">
+          <caret line="68" column="13" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
