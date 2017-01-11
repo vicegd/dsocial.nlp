@@ -3,14 +3,68 @@ import json
 import nltk
 import requests
 import random
-import lib.dsocialLib as dsocial
+import math
+import pickle
+import lib.feature_vector as feature_vector
+import lib.extract_features as extract_feactures
+import lib.classifiers.extendedNaiveBayesClassifier as extendedNaiveBayesClassifier
+from nltk.corpus import twitter_samples
 from nltk.metrics import precision, recall, f_measure
 from tabulate import tabulate
 
 baseUrl = "http://localhost:4001/api"
-percent = 0.9
 
-def assess_classifier(classifier, test_set, text):
+#negatives = twitter_samples.strings('negative_tweets.json')
+#positives = twitter_samples.strings('positive_tweets.json')
+
+def assess_classifier(classifier, extractor, pairs, text):
+    #random.shuffle(pairs)
+    kfolds = 10
+    instancesPerKfold = math.ceil((len(pairs) / kfolds))
+    percentToTrain = 0.85
+    instancesPerKfoldToTrain = math.ceil(instancesPerKfold*percentToTrain)
+    instancesPerKfoldToTest = instancesPerKfold-instancesPerKfoldToTrain
+
+    print('Total number of instances = %s' % (len(pairs)))
+    print('Number of K-folds = %s' % kfolds)
+    print('Number of instances in each k-fold = %s' % instancesPerKfold)
+    print('Percentage of instances trained in each k-fold = %s' % percentToTrain)
+    print('Number of instances per k-fold to train = %s' % instancesPerKfoldToTrain)
+    print('Number of instances per k-fold to test = %s' % instancesPerKfoldToTest)
+
+    #k-folds
+    totalAccuracy = 0
+    for i in range(1, kfolds+1):
+        j1 = (i-1)*instancesPerKfold
+        if (i == kfolds):
+            j2 = len(pairs)-instancesPerKfoldToTest
+            k1 = j2
+            k2 = len(pairs)
+        else:
+            j2 = j1 + instancesPerKfoldToTrain
+            k1 = j2
+            k2 = j2 + instancesPerKfoldToTest
+        train_set = nltk.classify.util.apply_features(extractor, pairs[j1:j2])
+        test_set = nltk.classify.util.apply_features(extractor, pairs[k1:k2])
+        trained_classifier = classifier.train(train_set)
+        f = open('serialized/movies_sentiment_unigrams_bayes_classifier.pickle', 'wb')
+        pickle.dump(trained_classifier, f)
+        f.close()
+        accuracy = nltk.classify.accuracy(trained_classifier, test_set)
+        print('\t K-fold %s training[%s,%s) testing[%s,%s) - accuracy:%s' % (i, j1, j2, k1, k2, accuracy))
+        totalAccuracy += accuracy
+
+    #individual
+    instances = math.ceil(len(pairs))
+    instancesToTrain = math.ceil(instances*percentToTrain)
+    train_set = nltk.classify.util.apply_features(extractor, pairs[:instancesToTrain])
+    test_set = nltk.classify.util.apply_features(extractor, pairs[instancesToTrain:instances])
+    trained_classifier = classifier.train(train_set)
+    accuracy = nltk.classify.accuracy(trained_classifier, test_set)
+    print('\t Complete training[%s,%s) testing[%s,%s) - accuracy:%s' % (0, instancesToTrain, instancesToTrain, instances, accuracy))
+
+    return [text, totalAccuracy/kfolds, 0, 0, 0, 0, 0, 0]
+    '''
     accuracy = nltk.classify.accuracy(classifier, test_set)
     refsets = collections.defaultdict(set)
     testsets = collections.defaultdict(set)
@@ -28,6 +82,7 @@ def assess_classifier(classifier, test_set, text):
     neg_fme = f_measure(refsets['negative'], testsets['negative'])
 
     return [text, accuracy, pos_pre, pos_rec, pos_fme, neg_pre, neg_rec, neg_fme]
+    '''
 
 data = []
 
@@ -50,21 +105,21 @@ if(response.ok):
     data = json.loads(response.content.decode('utf-8'))
     for message in data['messages']:
         if(message['nlp']['sentiment'] != 'unknown'):
-            processedMessage = dsocial.processMessage(message['nlp']['source'])
+            processedMessage = feature_vector.processMessage(message['nlp']['source'])
 
-            featureVectorBagOfWords = dsocial.getFeatureVectorUnigrams(processedMessage)
+            featureVectorBagOfWords = feature_vector.getFeatureVectorUnigrams(processedMessage)
             featureListBagOfWords.extend(featureVectorBagOfWords)
             pairsBagOfWords.append((featureVectorBagOfWords, message['nlp']['sentiment']))
 
-            featureVectorUnigrams = dsocial.getFeatureVectorUnigrams(processedMessage)
+            featureVectorUnigrams = feature_vector.getFeatureVectorUnigrams(processedMessage)
             featureListUnigrams.extend(featureVectorUnigrams)
             pairsUnigrams.append((featureVectorUnigrams, message['nlp']['sentiment']))
 
-            featureVectorBigrams = dsocial.getFeatureVectorBigrams(processedMessage)
+            featureVectorBigrams = feature_vector.getFeatureVectorBigrams(processedMessage)
             featureListBigrams.extend(featureVectorBigrams)
             pairsBigrams.append((featureVectorBigrams, message['nlp']['sentiment']))
 
-            featureVectorTrigrams = dsocial.getFeatureVectorTrigrams(processedMessage)
+            featureVectorTrigrams = feature_vector.getFeatureVectorTrigrams(processedMessage)
             featureListTrigrams.extend(featureVectorTrigrams)
             pairsTrigrams.append((featureVectorTrigrams, message['nlp']['sentiment']))
 
@@ -81,126 +136,42 @@ for element in freqBagOfWords.most_common():
         featureListBagOfWordsRep.append(element[0])
 
 featureListUnigrams = list(set(featureListUnigrams))
+f = open('serialized/movies_sentiment_unigrams_feature_list.pickle', 'wb')
+pickle.dump(featureListUnigrams, f)
+f.close()
+
 featureListBigrams = list(set(featureListBigrams))
 featureListTrigrams = list(set(featureListTrigrams))
 
-def extract_featuresBagOfWords(message):
-    message_words = set(message)
-    features = {}
-    for word in featureListBagOfWords:
-        features['contains(%s)' % word] = (word in message_words)
-    return features
-
-def extract_featuresBagOfWordsRep(message):
-    message_words = set(message)
-    features = {}
-    for word in featureListBagOfWordsRep:
-        features['contains(%s)' % word] = (word in message_words)
-    return features
-
-def extract_featuresUnigrams(message):
-    message_words = set(message)
-    features = {}
-    for word in featureListUnigrams:
-        features['contains(%s)' % word] = (word in message_words)
-    return features
-
-def extract_featuresBigrams(message):
-    message_words = set(message)
-    features = {}
-    for word1, word2 in featureListBigrams:
-        features['contains(%s,%s)' % (word1, word2)] = ((word1, word2) in message_words)
-    return features
-
-def extract_featuresTrigrams(message):
-    message_words = set(message)
-    features = {}
-    for word1, word2, word3 in featureListTrigrams:
-        features['contains(%s,%s,%s)' % (word1, word2, word3)] = ((word1, word2, word3) in message_words)
-    return features
-
-def extract_featuresUniBigrams(message):
-    message_words = set(message)
-    features = {}
-    for word1 in featureListUnigrams:
-        features['contains(%s)' % (word1)] = ((word1) in message_words)
-    for word1, word2 in featureListBigrams:
-        features['contains(%s,%s)' % (word1, word2)] = ((word1, word2) in message_words)
-    return features
-
-def extract_featuresBiTrigrams(message):
-    message_words = set(message)
-    features = {}
-    for word1, word2 in featureListBigrams:
-        features['contains(%s,%s)' % (word1, word2)] = ((word1, word2) in message_words)
-    for word1, word2, word3 in featureListTrigrams:
-        features['contains(%s,%s,%s)' % (word1, word2, word3)] = ((word1, word2, word3) in message_words)
-    return features
-
-def extract_featuresUniBiTrigrams(message):
-    message_words = set(message)
-    features = {}
-    for word1 in featureListUnigrams:
-        features['contains(%s)' % (word1)] = ((word1) in message_words)
-    for word1, word2 in featureListBigrams:
-        features['contains(%s,%s)' % (word1, word2)] = ((word1, word2) in message_words)
-    for word1, word2, word3 in featureListTrigrams:
-        features['contains(%s,%s,%s)' % (word1, word2, word3)] = ((word1, word2, word3) in message_words)
-    return features
-
-#random.shuffle(pairs)
-
-def execution(title, percent, extractor, pairs):
+def execution(title, extractor, pairs):
     print("\n\n" + title + " feature extration")
-    n = int(len(pairs) * percent)
-    train_set = nltk.classify.util.apply_features(extractor, pairs[:n])
-    test_set = nltk.classify.util.apply_features(extractor, pairs[n:])
-    print('train on %d instances, test on %d instances' % (n, len(pairs) - n))
     table = []
-    table.append(assess_classifier(nltk.NaiveBayesClassifier.train(train_set), test_set, "Naive Bayes"))
+    table.append(assess_classifier(nltk.NaiveBayesClassifier, extractor, pairs, "Naive Bayes"))
     #table.append(assess_classifier(nltk.DecisionTreeClassifier.train(train_set), test_set, "Decision Tree"))
     #table.append(assess_classifier(nltk.MaxentClassifier.train(train_set, 'GIS', trace=3, encoding=None, labels=None, gaussian_prior_sigma=0, max_iter = 10), test_set, "Maximum Entropy"))
     #table.append(assess_classifier(nltk.NaiveBayesClassifier.train(train_set), test_set, "Support Vector Machines"))
     print(tabulate(table, headers=["Classifier", "Accuracy", "Precision(pos)", "Recall(pos)", "F-measure(pos)",
                                "Precision(neg)", "Recall(neg)", "F-measure(neg)"]))
-execution("BAG OF WORDS (100 Words)", percent, extract_featuresBagOfWords, pairsBagOfWords)
-execution("BAG OF WORDS (More than 1 repetition)", percent, extract_featuresBagOfWordsRep, pairsBagOfWords)
-execution("UNIGRAMS", percent, extract_featuresUnigrams, pairsUnigrams)
-execution("BIGRAMS", percent, extract_featuresBigrams, pairsBigrams)
-execution("TRIGRAMS", percent, extract_featuresTrigrams, pairsTrigrams)
+#execution("BAG OF WORDS (100 Words)", extract_featuresBagOfWords, pairsBagOfWords)
+#execution("BAG OF WORDS (More than 1 repetition)", extract_featuresBagOfWordsRep, pairsBagOfWords)
+execution("UNIGRAMS", extract_feactures.extract_features_unigrams(featureListUnigrams), pairsUnigrams)
+#execution("BIGRAMS", extract_featuresBigrams, pairsBigrams)
+#execution("TRIGRAMS", extract_featuresTrigrams, pairsTrigrams)
 list = []
 for x in range(0, len(pairsUnigrams)):
     element = (pairsUnigrams[x][0] + pairsBigrams[x][0], pairsUnigrams[x][1])
     list.append(element)
-execution("UNIGRAMS AND BIGRAMS COMBINED", percent, extract_featuresUniBigrams, list)
+#execution("UNIGRAMS AND BIGRAMS COMBINED", extract_featuresUniBigrams, list)
 list = []
 for x in range(0, len(pairsUnigrams)):
     element = (pairsBigrams[x][0] + pairsTrigrams[x][0], pairsUnigrams[x][1])
     list.append(element)
-execution("BIGRAMS AND TRIGRAMS COMBINED", percent, extract_featuresBiTrigrams, list)
+#execution("BIGRAMS AND TRIGRAMS COMBINED", extract_featuresBiTrigrams, list)
 list = []
 for x in range(0, len(pairsUnigrams)):
     element = (pairsUnigrams[x][0] + pairsBigrams[x][0] + pairsTrigrams[x][0], pairsUnigrams[x][1])
     list.append(element)
-execution("UNIGRAMS, BIGRAMS AND TRIGRAMS COMBINED", percent, extract_featuresUniBiTrigrams, list)
+#execution("UNIGRAMS, BIGRAMS AND TRIGRAMS COMBINED", extract_featuresUniBiTrigrams, list)
 #execution("TF-IDF feature extraction")
 
-'''
-#test the classifier
-testMessage = 'Congrats @ravikiranj, i heard you wrote a new tech post on sentiment analysis'
-response = requests.get(baseUrl + '/nlp/processMessage/' + testMessage)
-cleanTestMessage = ''
-if(response.ok):
-    cleanTestMessage = json.loads(response.content.decode('utf-8'))
-else:
-    response.raise_for_status()
-
-response = requests.get(baseUrl + '/nlp/unigrams/' + cleanTestMessage)
-if(response.ok):
-    unigrams = json.loads(response.content.decode('utf-8'))
-
-    print(NBClassifier.classify(extract_features(unigrams)))
-    #print(NBClassifier.show_most_informative_features(10))
-else:
-    response.raise_for_status()
-'''
+text = "Hello this is a test. I liked the movie so much"
