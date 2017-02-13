@@ -98,3 +98,25 @@ execution("UNIGRAMS", extract_features.extract_features_unigrams, pairsUnigrams)
 #    list.append(element)
 #execution("UNIGRAMS, BIGRAMS AND TRIGRAMS COMBINED", extract_featuresUniBiTrigrams, list)
 #execution("TF-IDF feature extraction")
+
+for message in data['messages']:
+    if(message['nlp']['sentiment'] != 'unknown'):
+        response = requests.get("http://localhost:5000/api/sentiment/movies/" + message['nlp']['source'])
+        if(response.ok):
+            data = json.loads(response.content.decode('utf-8'))
+            if (data['previousPositive'] >= data['previousNegative']):
+                previousSentiment = 'positive'
+            else:
+                previousSentiment = 'negative'
+            if (data['positive'] >= data['negative']):
+                sentiment = 'positive'
+            else:
+                sentiment = 'negative'
+            if (message['nlp']['sentiment'] != previousSentiment):
+                print('{0},{1:.3f},{2:.3f},{3:.3f},{4:.3f},{5},{6},{7}'.format(message['nlp']['source'],
+                                           data['previousNegative'], data['previousPositive'],
+                                           data['negative'], data['positive'],
+                                           message['nlp']['sentiment'], previousSentiment, sentiment
+                    ));
+        #else:
+        #    response.raise_for_status()
